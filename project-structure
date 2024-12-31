@@ -1,0 +1,13 @@
+coffeecloud/
+├── src/
+│   ├── lib/
+│   │   ├── components/
+│   │   └── stores/
+│   ├── routes/
+│   │   ├── +page.svelte
+│   │   └── +layout.svelte
+│   └── app.html
+├── static/
+│   └── images/
+├── package.json
+└── svelte.config.js 
