@@ -9,13 +9,14 @@ export const GET: RequestHandler = async ({ locals }) => {
       return json({ status: 'none' });
     }
 
-    const [result] = await query<[{ verify_status: VerifyStatus }]>(
-      'SELECT verify_status FROM users WHERE id = ?',
+    const [result] = await query<[{ verify_status: VerifyStatus, status: number }]>(
+      'SELECT verify_status, status FROM users WHERE id = ?',
       [locals.user.id]
     );
 
     return json({
-      status: result?.verify_status || 'none'
+      status: result?.verify_status || 'none',
+      userStatus: result?.status || 0
     });
 
   } catch (error) {

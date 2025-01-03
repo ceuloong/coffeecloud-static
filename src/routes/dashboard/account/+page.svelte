@@ -2,8 +2,14 @@
   import { language, t } from '$lib/stores/i18nStore';
   
   export let data;
-  const user = data?.user || { username: '', email: '' };
+  const user = data?.user || { username: '', email: '', status: 0 };
   const verifyStatus = data?.verifyStatus?.status || 'none';
+
+  const userStatusMap = {
+    0: t('dashboard.account.status.inactive', $language),
+    1: t('dashboard.account.status.active', $language),
+    2: t('dashboard.account.status.disabled', $language)
+  };
 
   type StatusType = 'pending' | 'verified' | 'rejected' | 'none';
   const statusClassMap: Record<StatusType, string> = {
@@ -34,6 +40,9 @@
       <div class="info-item">
         <span class="label">{t('auth.username', $language)}:</span>
         <span class="value">{user.username}</span>
+        <span class="status-badge {user.status === 0 ? 'status-pending' : 'status-active'}">
+          {userStatusMap[user.status as keyof typeof userStatusMap] || userStatusMap[0]}
+        </span>
       </div>
       <div class="info-item">
         <span class="label">{t('auth.email', $language)}:</span>
@@ -109,7 +118,6 @@
 
   .info-item .value {
     color: var(--text-color);
-    flex: 1;
   }
 
   .status-active {
@@ -149,5 +157,23 @@
       min-width: auto;
       padding-right: 0;
     }
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    margin-left: 0.75rem;
+  }
+
+  .status-badge.status-pending {
+    background-color: #FEF3C7;
+    color: #92400E;
+  }
+
+  .status-badge.status-active {
+    background-color: #DEF7EC;
+    color: #03543F;
   }
 </style> 

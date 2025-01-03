@@ -1,44 +1,33 @@
+import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { query } from '$lib/server/db';
-import type { RowDataPacket } from 'mysql2';
 
-interface UserRow extends RowDataPacket {
-  id: number;
-  username: string;
-  email: string;
-}
-
-export const load: LayoutServerLoad = async ({ locals }) => {
+export const load: LayoutServerLoad = async ({ locals, fetch }) => {
   if (!locals.user) {
-    return {
-      user: null
-    };
+    return {};
   }
 
-  try {
-    const users = await query<UserRow[]>(
-      'SELECT id, username, email FROM users WHERE id = ?',
-      [locals.user.id]
-    );
+  // 检查用户状态
+  const [userStatus] = await query<[{ status: number }]>(
+    'SELECT status FROM users WHERE id = ?',
+    [locals.user.id]
+  );
+  
+  // 如果用户被禁用，清除 cookie 并重定向到登录页
+  if (userStatus?.status === 2) {
+    await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
 
-    if (!users || users.length === 0) {
-      return {
-        user: null
-      };
+    throw redirect(302, '/login');
+  }
+
+  return {
+    user: {
+      username: locals.user.username,
+      email: locals.user.email,
+      status: locals.user.status
     }
-
-    const user = users[0];
-    return {
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
-    };
-  } catch (error) {
-    console.error('Error loading user:', error);
-    return {
-      user: null
-    };
-  }
+  };
 }; 

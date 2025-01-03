@@ -25,7 +25,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 
   // 获取用户创建时间
   const userResult = await query<any[]>(
-    'SELECT created_at FROM users WHERE id = ?',
+    'SELECT created_at, status FROM users WHERE id = ?',
     [locals.user.id]
   );
 
@@ -39,7 +39,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
     user: {
       id: user.id,
       username: user.username || user.email.split('@')[0],
-      status: user.status,
+      status: userResult[0]?.status || 0,
       email: user.email,
       createdAt: userResult[0]?.created_at || new Date().toISOString()
     },

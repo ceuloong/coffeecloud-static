@@ -13,6 +13,9 @@
 
   // 检查是否可以提交认证
   function canSubmitVerification() {
+    if (user.status === 0) {
+      return false;
+    }
     return !['pending', 'verified'].includes(verifyStatus);
   }
 

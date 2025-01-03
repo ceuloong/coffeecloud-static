@@ -145,7 +145,14 @@
       // 先检查当前认证状态
       const statusResponse = await fetch('/api/user/verify/status');
       const statusData = await statusResponse.json();
-      
+
+      if (statusData.userStatus === 0) {
+        error = t('dashboard.verify.notActivated', $language);
+        loading = false;
+        window.location.href = '/dashboard';
+        return;
+      }
+
       if (statusData.status === 'pending') {
         error = t('dashboard.verify.alreadySubmitted', $language);
         loading = false;
@@ -271,13 +278,14 @@
       <div class="upload-box">
         <input
           type="file"
-          accept=".jpg,.jpeg,.png"
+          accept="image/jpeg,image/jpg,image/png"
           on:change={(e) => handleFileSelect(e, 'front')}
           required
           name="idFront"
           disabled={loading}
           id="id-front"
           class="file-input"
+          capture="environment"
         />
         <label for="id-front" class="upload-label">
           {#if idFrontPreview}
@@ -380,6 +388,8 @@
     padding: 1rem;
     text-align: center;
     transition: all 0.2s;
+    position: relative;
+    z-index: 1;
   }
 
   .upload-label:hover {
@@ -493,5 +503,18 @@
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.2);
+  }
+
+  .file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
   }
 </style> 

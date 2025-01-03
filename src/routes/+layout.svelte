@@ -4,6 +4,11 @@
   import { language, t } from '$lib/stores/i18nStore';
   import { onMount } from 'svelte';
 
+  // 监听用户状态
+  $: if ($userStore?.status === 2) {
+    handleLogout();
+  }
+
   onMount(() => {
     language.init();
   });

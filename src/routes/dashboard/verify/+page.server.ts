@@ -5,6 +5,7 @@ import type { VerifyStatus } from '$lib/types';
 interface UserVerifyInfo {
   verify_status: VerifyStatus;
   real_name?: string;
+  status: number;
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -17,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   }
 
   const [user] = await query<[UserVerifyInfo]>(
-    `SELECT u.verify_status, v.real_name, v.created_at
+    `SELECT u.verify_status, u.status, v.real_name, v.created_at
      FROM users u 
      LEFT JOIN user_verifications v ON u.id = v.user_id 
      WHERE u.id = ? ORDER BY created_at DESC limit 1`,
@@ -32,7 +33,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   return {
     verifyStatus: { status: user?.verify_status || 'none' },
-    userStatus: locals.user.status,
+    userStatus: user?.status || 0,
     realName: displayName
   };
 }; 
