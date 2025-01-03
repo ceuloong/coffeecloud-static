@@ -118,7 +118,9 @@ export const translations = {
         errors: {
           invalididcard: '请输入正确的身份证号码',
           invalidpassport: '请输入正确的护照号码',
-          invalidother: '证件号码至少需要4位'
+          invalidother: '证件号码至少需要4位',
+          invalidFileType: '只支持 JPG、JPEG 或 PNG 格式的图片',
+          fileTooLarge: '文件大小不能超过 8MB'
         },
         uploadTitle: '证件照片'
       },
@@ -466,7 +468,9 @@ export const translations = {
         errors: {
           invalididcard: 'Please enter a valid ID card number',
           invalidpassport: 'Please enter a valid passport number',
-          invalidother: 'Document number must be at least 4 characters'
+          invalidother: 'Document number must be at least 4 characters',
+          invalidFileType: 'Only JPG, JPEG or PNG images are supported',
+          fileTooLarge: 'File size cannot exceed 8MB'
         },
         uploadTitle: 'ID Photos'
       },

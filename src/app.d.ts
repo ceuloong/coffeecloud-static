@@ -13,6 +13,7 @@ declare global {
 				email: string;
 				iat: number;
 				exp: number;
+				status: number;
 			} | null;
 		}
 	}

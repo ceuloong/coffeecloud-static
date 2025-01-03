@@ -46,6 +46,20 @@
     const file = input.files?.[0];
     if (!file) return;
 
+    // 检查文件大小 (8MB = 8 * 1024 * 1024 bytes)
+    const maxSize = 8 * 1024 * 1024;
+    if (file.size > maxSize) {
+      error = t('dashboard.verify.errors.fileTooLarge', $language);
+      return;
+    }
+
+    // 添加文件类型验证
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+      error = t('dashboard.verify.errors.invalidFileType', $language);
+      return;
+    }
+
     try {
       loading = true;
 
@@ -127,13 +141,33 @@
     error = '';
     loading = true;
 
-    if (!validateIdNumber(idNumber, idType)) {
-      error = t(`dashboard.verify.errors.invalid${idType}`, $language);
-      loading = false;
-      return;
-    }
-
     try {
+      // 先检查当前认证状态
+      const statusResponse = await fetch('/api/user/verify/status');
+      const statusData = await statusResponse.json();
+      
+      if (statusData.status === 'pending') {
+        error = t('dashboard.verify.alreadySubmitted', $language);
+        loading = false;
+        window.location.reload();
+        return;
+      }
+      
+      if (statusData.status === 'verified') {
+        error = t('dashboard.verify.alreadyVerified', $language);
+        loading = false;
+        window.location.reload();
+        return;
+      }
+
+      // 验证表单数据
+      if (!validateIdNumber(idNumber, idType)) {
+        error = t(`dashboard.verify.errors.invalid${idType}`, $language);
+        loading = false;
+        return;
+      }
+
+      // 提交认证信息
       const formData = new FormData();
       formData.append('realName', realName);
       formData.append('idType', idType);
@@ -151,10 +185,13 @@
         throw new Error(data.message);
       }
 
-      // 提交成功后刷新页面
-      await invalidate('app:user');
+      // 提交成功后处理
       dispatch('success', data.message);
-      goto('/dashboard/verify', { replaceState: true });
+      // 先等待数据失效
+      await invalidate('app:user');
+      // 然后强制刷新页面
+      window.location.reload();
+
     } catch (err: any) {
       error = err.message;
     } finally {
@@ -234,7 +271,7 @@
       <div class="upload-box">
         <input
           type="file"
-          accept="image/*"
+          accept=".jpg,.jpeg,.png"
           on:change={(e) => handleFileSelect(e, 'front')}
           required
           name="idFront"
@@ -255,13 +292,14 @@
       <div class="upload-box">
         <input
           type="file"
-          accept="image/*"
+          accept=".jpg,.jpeg,.png"
           on:change={(e) => handleFileSelect(e, 'back')}
           required
           name="idBack"
           disabled={loading}
           style="display: none"
           id="id-back"
+          class="file-input"
         />
         <label for="id-back" class="upload-label">
           {#if idBackPreview}

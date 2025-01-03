@@ -29,7 +29,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
     // 检查是否已提交过认证
     const [verifications] = await connection.query<VerificationRow[]>(
-      'SELECT id, status FROM user_verifications WHERE user_id = ?',
+      'SELECT id, status FROM user_verifications WHERE user_id = ? and status != "rejected" and deleted_at IS NULL',
       [locals.user.id]
     );
 
@@ -87,13 +87,14 @@ export const GET: RequestHandler = async ({ locals }) => {
       `SELECT v.*, u.verify_status, v.reject_reason
        FROM user_verifications v 
        JOIN users u ON u.id = v.user_id 
-       WHERE v.user_id = ? 
+       WHERE v.user_id = ? AND v.deleted_at IS NULL 
        ORDER BY v.created_at DESC 
        LIMIT 1`,
       [locals.user.id]
     );
 
     return json({
+      realName: verifications[0]?.real_name || '',
       status: verifications[0]?.status || 'none',
       verifyStatus: verifications[0]?.verify_status || 'pending',
       rejectReason: verifications[0]?.reject_reason || ''
