@@ -3,14 +3,41 @@
   import { userStore } from '$lib/stores/userStore';
   import { language, t } from '$lib/stores/i18nStore';
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
 
   // 监听用户状态
   $: if ($userStore?.status === 2) {
     handleLogout();
   }
 
+  // 检查 token 有效性
+  async function checkAuth() {
+    try {
+      const response = await fetch('/api/auth/check', {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        userStore.logout();
+        if (window.location.pathname.startsWith('/dashboard')) {
+          window.location.href = '/login';
+        }
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      userStore.logout();
+    }
+  }
+
+  // 初始化用户状态
   onMount(() => {
     language.init();
+    if (browser) {
+      userStore.init();
+      if (!$userStore) {
+        checkAuth();
+      }
+    }
   });
 
   async function handleLogout() {

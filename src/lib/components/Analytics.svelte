@@ -284,23 +284,6 @@
     font-weight: normal;
   }
 
-  .chart-container {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .chart-container h3 {
-    margin-bottom: 1rem;
-    color: var(--text-color);
-  }
-
-  .chart-container div {
-    width: 100%;
-    height: 300px;
-  }
-
   .metrics-container {
     background: white;
     padding: 1.5rem;

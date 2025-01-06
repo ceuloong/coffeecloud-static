@@ -27,6 +27,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       return json({ message: '请填写完整信息' }, { status: 400 });
     }
 
+    // 检查证件号码是否已存在
+    const [existingVerifications] = await connection.query<RowDataPacket[]>(
+      `SELECT id FROM user_verifications 
+       WHERE id_number = ? AND user_id != ? AND deleted_at IS NULL`,
+      [idNumber, locals.user.id]
+    );
+
+    if (existingVerifications.length > 0) {
+      return json({ message: '该证件号码已被使用' }, { status: 400 });
+    }
+
     // 检查是否已提交过认证
     const [verifications] = await connection.query<VerificationRow[]>(
       'SELECT id, status FROM user_verifications WHERE user_id = ? and status != "rejected" and deleted_at IS NULL',
@@ -60,7 +71,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       // 提交事务
       await connection.commit();
 
-      return json({ message: '认证申请提交成功，请等待审核' });
+      return json(
+        { message: 'Verification submitted successfully' },
+        {
+          headers: {
+            'Access-Control-Allow-Origin': request.headers.get('origin') || '*',
+            'Access-Control-Allow-Credentials': 'true'
+          }
+        }
+      );
     } catch (error) {
       // 如果出错，回滚事务
       await connection.rollback();

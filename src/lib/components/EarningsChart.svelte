@@ -11,7 +11,7 @@
   };
   
   let chartElement: HTMLElement;
-  let chart;
+  let chart: any;
   let selectedRange = '7d';
   
   const timeRanges = [

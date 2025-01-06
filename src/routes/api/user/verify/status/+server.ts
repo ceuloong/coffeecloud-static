@@ -10,8 +10,11 @@ export const GET: RequestHandler = async ({ locals }) => {
     }
 
     const [result] = await query<[{ verify_status: VerifyStatus, status: number }]>(
-      'SELECT verify_status, status FROM users WHERE id = ?',
-      [locals.user.id]
+      `SELECT u.status, v.status as verify_status, v.real_name, v.created_at
+        FROM users u 
+        LEFT JOIN user_verifications v ON u.id = v.user_id AND v.deleted_at IS NULL
+        WHERE u.id = ? ORDER BY v.created_at DESC limit 1`,
+        [locals.user.id]
     );
 
     return json({

@@ -7,5 +7,6 @@ export interface User {
   username: string;
   status: UserStatus;
   verify_status: VerifyStatus;
+  token?: string;
   // ... other fields
 } 

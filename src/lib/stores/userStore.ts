@@ -1,20 +1,9 @@
 import { writable } from 'svelte/store';
+import type { User } from '$lib/types';
 import { browser } from '$app/environment';
 
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  status: number;
-  isLoggedIn: boolean;
-}
-
 function createUserStore() {
-  // 从 localStorage 获取初始状态
-  const storedUser = browser ? localStorage.getItem('user') : null;
-  const initialUser = storedUser ? JSON.parse(storedUser) : null;
-  
-  const { subscribe, set, update } = writable<User | null>(initialUser);
+  const { subscribe, set } = writable<User | null>(null);
 
   return {
     subscribe,
@@ -30,14 +19,13 @@ function createUserStore() {
         localStorage.removeItem('user');
       }
     },
-    update: (data: Partial<User>) => {
-      update(user => {
-        const updatedUser = user ? { ...user, ...data } : null;
-        if (browser && updatedUser) {
-          localStorage.setItem('user', JSON.stringify(updatedUser));
+    init: () => {
+      if (browser) {
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) {
+          set(JSON.parse(savedUser));
         }
-        return updatedUser;
-      });
+      }
     }
   };
 }

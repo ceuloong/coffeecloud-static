@@ -19,7 +19,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 
   // 获取用户认证状态
   const verifyResult = await query<any[]>(
-    'SELECT status, reject_reason FROM user_verifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+    'SELECT status, reject_reason FROM user_verifications WHERE user_id = ? AND deleted_at IS NULL ORDER BY created_at DESC LIMIT 1',
     [locals.user.id]
   );
 

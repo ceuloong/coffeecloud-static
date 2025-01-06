@@ -18,10 +18,10 @@ export const load: PageServerLoad = async ({ locals }) => {
   }
 
   const [user] = await query<[UserVerifyInfo]>(
-    `SELECT u.verify_status, u.status, v.real_name, v.created_at
+    `SELECT u.status, v.status as verify_status, v.real_name, v.created_at
      FROM users u 
-     LEFT JOIN user_verifications v ON u.id = v.user_id 
-     WHERE u.id = ? ORDER BY created_at DESC limit 1`,
+     LEFT JOIN user_verifications v ON u.id = v.user_id AND v.deleted_at IS NULL
+     WHERE u.id = ? ORDER BY v.created_at DESC limit 1`,
     [locals.user.id]
   );
 

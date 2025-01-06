@@ -3,7 +3,6 @@
   import { invalidate } from '$app/navigation';
   import { userStore } from '$lib/stores/userStore';
   import { language, t } from '$lib/stores/i18nStore';
-  import { goto } from '$app/navigation';
 
   const dispatch = createEventDispatcher();
 
@@ -82,6 +81,7 @@
       formData.append('file', file);
       formData.append('folder_path', filePath);
       formData.append('new_filename', filename);
+      formData.append('token', import.meta.env.VITE_UPLOAD_TOKEN);
 
       // 调用上传服务
       const response = await fetch('/upload-api/upload', {
@@ -91,6 +91,7 @@
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
+          'Authorization': `${import.meta.env.VITE_UPLOAD_TOKEN}`
         }
       });
 
@@ -156,14 +157,12 @@
       if (statusData.status === 'pending') {
         error = t('dashboard.verify.alreadySubmitted', $language);
         loading = false;
-        window.location.reload();
         return;
       }
       
       if (statusData.status === 'verified') {
         error = t('dashboard.verify.alreadyVerified', $language);
         loading = false;
-        window.location.reload();
         return;
       }
 
@@ -184,14 +183,17 @@
 
       const response = await fetch('/api/user/verify', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        },
+        credentials: 'include'
       });
 
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message);
       }
-
       // 提交成功后处理
       dispatch('success', data.message);
       // 先等待数据失效
