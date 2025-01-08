@@ -5,8 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && npm run copy-env",
-		"copy-env": "cp .env.production build/.env",
+		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -39,6 +38,7 @@
 		"@types/jsonwebtoken": "^9.0.7",
 		"apexcharts": "^4.3.0",
 		"bcrypt": "^5.1.1",
+		"http-proxy-middleware": "^3.0.3",
 		"jsonwebtoken": "^9.0.2",
 		"mysql2": "^3.11.5",
 		"uplot": "^1.6.31"
