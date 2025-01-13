@@ -1,30 +1,29 @@
-import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '$env/static/private';
-import { initializeDatabase } from '$lib/server/dbInit';
+import {verifyToken } from '$lib/server/auth';
+import { redirect } from '@sveltejs/kit';
 
-// 初始化数据库
-initializeDatabase().catch(console.error);
+// 启动时打印环境信息
+console.log('=== Server Starting ===');
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Port:', process.env.PORT || 3000);
+console.log('=========*******============');
 
-const authorization: Handle = async ({ event, resolve }) => {
+export const handle: Handle =async ({ event, resolve }) => {
   const token = event.cookies.get('session');
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as {
-        id: number;
-        email: string;
-        iat: number;
-        exp: number;
-      };
-      event.locals.user = decoded;
-    } catch (err) {
+      const user = verifyToken(token);
+      event.locals.user = user;
+    } catch (error) {
+      console.error('Token verification failed:', error);
       event.cookies.delete('session', { path: '/' });
+      if (event.url.pathname.startsWith('/dashboard')) {
+        throw redirect(302, '/login');
+      }
     }
   }
 
-  return resolve(event);
+  const response = await resolve(event);
+  return response;
 };
-
-export const handle = sequence(authorization); 

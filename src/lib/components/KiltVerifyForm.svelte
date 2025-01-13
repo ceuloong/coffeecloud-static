@@ -173,25 +173,20 @@
       }
 
       // 提交认证信息
-      // const formData = new FormData();
-      // formData.append('realName', realName);
-      // formData.append('idType', idType);
-      // formData.append('idNumber', idNumber);
-      // formData.append('idFrontPath', idFrontPath || '');
-      // formData.append('idBackPath', idBackPath || '');
+      const formData = new FormData();
+      formData.append('realName', realName);
+      formData.append('idType', idType);
+      formData.append('idNumber', idNumber);
+      formData.append('idFrontPath', idFrontPath || '');
+      formData.append('idBackPath', idBackPath || '');
 
       const response = await fetch('/api/user/verify', {
-        // method: 'POST',
-        // body: formData,
-        // headers: {
-        //   'Accept': 'application/json',
-        //   'Origin': 'http://www.cct.io:8088'
-        // },
-        // credentials: 'include',
-        // mode: 'same-origin'
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ realName, idType, idNumber, idFrontPath, idBackPath })
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
       });
 
       const data = await response.json();
@@ -232,12 +227,12 @@
   };
 </script>
 
-<form class="verify-form" on:submit={handleSubmit}>
+<form on:submit|preventDefault={handleSubmit}>
   {#if error}
     <div class="error-message">{error}</div>
   {/if}
 
-  <div class="form-group input-group">
+  <div class="form-group">
     <label for="real-name">{t('dashboard.account.realName', $language)}</label>
     <input
       type="text"
@@ -263,7 +258,7 @@
     </select>
   </div>
 
-  <div class="form-group input-group">
+  <div class="form-group">
     <label for="id-number">
       {t(`dashboard.verify.${idType}Number`, $language)}
     </label>
@@ -340,16 +335,7 @@
 
 <style>
   .form-group {
-    max-width: 800px;
-    margin: 0 auto;
     margin-bottom: 1.5rem;
-  }
-
-  .verify-form {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
   }
 
   .form-group label {
@@ -358,11 +344,8 @@
     color: var(--text-color);
   }
 
-  .input-group input {
-    width: 100%;
-  }
-
   .form-group input {
+    width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -377,31 +360,17 @@
 
   .upload-area {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: 768px) {
-    .upload-area {
-      flex-direction: row;
-      gap: 1rem;
-    }
+    gap: 1rem;
   }
 
   .upload-box {
     flex: 1;
-    width: 100%;
-    height: 200px;
     border: 2px dashed #cbd5e0;
     border-radius: 4px;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
     background: white;
-    overflow: hidden;
   }
 
   .upload-box:hover {
@@ -515,9 +484,10 @@
 
   .preview-image {
     width: 100%;
-    height: 100%;
+    max-height: 150px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
     border-radius: 4px;
-    object-fit: cover;
   }
 
   .select-input {

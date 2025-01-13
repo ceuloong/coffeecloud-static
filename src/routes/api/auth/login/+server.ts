@@ -12,8 +12,11 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       path: '/',
       httpOnly: true,
       sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
+      // 如果是生产环境或者使用 HTTPS
+      secure: process.env.NODE_ENV === 'production' || request.url.startsWith('https'),
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      // 只在使用 HTTPS 时设置 domain
+      domain: request.url.startsWith('https') ? 'www.cc.io' : undefined
     });
 
     return json({

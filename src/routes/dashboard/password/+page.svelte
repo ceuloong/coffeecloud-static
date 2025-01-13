@@ -12,7 +12,13 @@
     success = '';
     
     if (newPassword !== confirmPassword) {
-      error = t('dashboard.password.mismatch', $language);
+      error = t('dashboard.password.errors.mismatch', $language);
+      return;
+    }
+
+    // 验证新旧密码不能相同
+    if (currentPassword === newPassword) {
+      error = t('dashboard.password.errors.samePassword', $language);
       return;
     }
 
@@ -174,7 +180,8 @@
   }
 
   .submit-button:hover {
-    background: var(--primary-dark);
+    background: var(--primary-dark 0.1);
+    opacity: 0.9;
   }
 
   .error-message, .success-message {

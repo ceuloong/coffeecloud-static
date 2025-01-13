@@ -10,17 +10,23 @@ interface VerificationRow extends RowDataPacket {
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   if (!locals.user) {
-    return json({ message: '未登录' }, { status: 401 });
+    return json({ message: '未登录' }, { 
+      status: 401,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   const connection = await pool.getConnection();
 
   try {
-    const formData = await request.formData();
-    const realName = formData.get('realName') as string;
-    const idNumber = formData.get('idNumber') as string;
-    const idFrontPath = formData.get('idFrontPath') as string;
-    const idBackPath = formData.get('idBackPath') as string;
+    // const formData = await request.formData();
+    // const realName = formData.get('realName') as string;
+    // const idNumber = formData.get('idNumber') as string;
+    // const idFrontPath = formData.get('idFrontPath') as string;
+    // const idBackPath = formData.get('idBackPath') as string;
+    const { realName, idNumber, idFrontPath, idBackPath } = await request.json();
 
     // 验证数据
     if (!realName || !idNumber || !idFrontPath || !idBackPath) {
@@ -75,8 +81,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         { message: 'Verification submitted successfully' },
         {
           headers: {
-            'Access-Control-Allow-Origin': request.headers.get('origin') || '*',
-            'Access-Control-Allow-Credentials': 'true'
+            'Content-Type': 'application/json'
           }
         }
       );

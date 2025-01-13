@@ -17,6 +17,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   try {
     const { currentPassword, newPassword } = await request.json();
 
+        // 验证新旧密码不能相同
+    if (currentPassword === newPassword) {
+      return json({ message: '新密码不能与当前密码相同' }, { status: 400 });
+    }
+
     // 验证当前密码
     const users = await query<UserRow[]>(
       'SELECT id, password_hash FROM users WHERE id = ?',

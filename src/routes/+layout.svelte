@@ -1,9 +1,11 @@
 <script lang="ts">
+  import '@fortawesome/fontawesome-free/css/all.min.css';
   import '../app.css';
   import { userStore } from '$lib/stores/userStore';
   import { language, t } from '$lib/stores/i18nStore';
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import { page } from '$app/stores';
 
   // 监听用户状态
   $: if ($userStore?.status === 2) {
@@ -62,7 +64,28 @@
   function toggleLanguage() {
     language.setLanguage($language === 'zh' ? 'en' : 'zh');
   }
+
+  // 定义页面标题映射
+  const titleMap: { [key: string]: string } = {
+    '/': 'home',
+    '/dashboard': 'dashboard',
+    '/dashboard/account': 'account',
+    '/dashboard/verify': 'verify',
+    '/dashboard/password': 'password',
+    '/dashboard/earnings': 'earnings',
+    '/products': 'products',
+    '/contact': 'contact'
+  };
+
+  // 动态生成标题
+  $: pageTitle = titleMap[$page.url.pathname]
+    ? t(`pages.${titleMap[$page.url.pathname]}.title`, $language)
+    : 'Coffee Cloud';
 </script>
+
+<svelte:head>
+  <title>{pageTitle} - Coffee Cloud</title>
+</svelte:head>
 
 <div class="app">
   <header>
@@ -75,6 +98,7 @@
       </div>
       <div class="nav-right">
         <a href="/products">{t('common.products', $language)}</a>
+        <a href="/contact">{t('common.contactUs', $language)}</a>
         {#if $userStore}
           <a href="/dashboard">{t('common.dashboard', $language)}</a>
           <button class="logout-btn" on:click={handleLogout}>

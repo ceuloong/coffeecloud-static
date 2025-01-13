@@ -37,11 +37,7 @@
       
       success = t('auth.loginSuccess', $language);
 
-      try {
-        window.location.href = '/dashboard';
-      } catch (navError) {
-        console.error('Navigation error:', navError);
-      }
+      await goto('/dashboard', { replaceState: true });
     } catch (err: unknown) {
       console.error('Login error:', err);
       error = err instanceof Error ? err.message : t('auth.loginFailed', $language);

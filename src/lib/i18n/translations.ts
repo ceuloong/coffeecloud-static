@@ -7,11 +7,13 @@ export const translations = {
       logout: '退出',
       dashboard: '个人中心',
       products: '算力产品',
+      contactUs: '联系我们',
       submit: '提交',
       cancel: '取消',
       loading: '加载中...',
       error: '错误',
-      success: '成功'
+      success: '成功',
+      back: '返回'
     },
     auth: {
       email: '邮箱',
@@ -122,7 +124,22 @@ export const translations = {
           invalidFileType: '只支持 JPG、JPEG 或 PNG 格式的图片',
           fileTooLarge: '文件大小不能超过 8MB'
         },
-        uploadTitle: '证件照片'
+        uploadTitle: '证件照片',
+        selectMethod: '选择认证方式',
+        methods: {
+          manual: {
+            title: '人工审核',
+            description: '上传身份证件，由工作人员进行人工审核，审核时间1-3个工作日'
+          },
+          auto: {
+            title: 'AI自动审核',
+            description: '通过人工智能技术自动识别和验证身份信息，实时完成审核'
+          },
+          kilt: {
+            title: 'KILT ID认证',
+            description: '使用KILT协议进行去中心化身份认证，保护您的隐私'
+          }
+        }
       },
       menu: {
         console: '控制台',
@@ -141,6 +158,10 @@ export const translations = {
           current: '请输入当前密码',
           new: '请输入新密码',
           confirm: '请再次输入新密码'
+        },
+        errors: {
+          mismatch: '两次输入的密码不一致',
+          samePassword: '新密码不能与当前密码相同'
         },
         rules: {
           required: '密码不能为空',
@@ -347,6 +368,44 @@ export const translations = {
           desc: '专业运维团队7*24小时保障'
         }
       }
+    },
+    contact: {
+      title: '联系我们',
+      description: '如果您有任何问题或建议，请随时联系我们',
+      email: '联系邮箱',
+      emailPlaceholder: '请输入您的邮箱',
+      subject: '主题',
+      subjectPlaceholder: '请输入主题',
+      message: '内容',
+      messagePlaceholder: '请详细描述您的需求',
+      submit: '提交',
+      submitSuccess: '提交成功，我们会尽快回复您'
+    },
+    pages: {
+      home: {
+        title: '首页'
+      },
+      dashboard: {
+        title: '个人中心'
+      },
+      account: {
+        title: '账户信息'
+      },
+      verify: {
+        title: '实名认证'
+      },
+      password: {
+        title: '修改密码'
+      },
+      earnings: {
+        title: '收益明细'
+      },
+      products: {
+        title: '算力产品'
+      },
+      contact: {
+        title: '联系我们'
+      }
     }
   },
   en: {
@@ -361,7 +420,9 @@ export const translations = {
       cancel: 'Cancel',
       loading: 'Loading...',
       error: 'Error',
-      success: 'Success'
+      success: 'Success',
+      contactUs: 'Contact Us',
+      back: 'Back'
     },
     auth: {
       email: 'Email',
@@ -472,7 +533,22 @@ export const translations = {
           invalidFileType: 'Only JPG, JPEG or PNG images are supported',
           fileTooLarge: 'File size cannot exceed 8MB'
         },
-        uploadTitle: 'ID Photos'
+        uploadTitle: 'ID Photos',
+        selectMethod: 'Choose Verification Method',
+        methods: {
+          manual: {
+            title: 'Manual Review',
+            description: 'Upload ID documents for manual review by our staff, processing time 1-3 business days'
+          },
+          auto: {
+            title: 'AI Auto Review',
+            description: 'Instant verification using AI technology to identify and validate identity information'
+          },
+          kilt: {
+            title: 'KILT ID Verify',
+            description: 'Decentralized identity verification using KILT protocol to protect your privacy'
+          }
+        }
       },
       menu: {
         console: 'Console',
@@ -491,6 +567,10 @@ export const translations = {
           current: 'Enter current password',
           new: 'Enter new password',
           confirm: 'Confirm new password'
+        },
+        errors: {
+          mismatch: 'The new password and the current password cannot be the same',
+          samePassword: 'The new password cannot be the same as the current password'
         },
         rules: {
           required: 'Password is required',
@@ -705,6 +785,44 @@ export const translations = {
       notification: 'Notifications',
       darkMode: 'Dark Mode',
       lightMode: 'Light Mode'
+    },
+    contact: {
+      title: 'Contact Us',
+      description: 'If you have any questions or suggestions, please feel free to contact us',
+      email: 'Contact Email',
+      emailPlaceholder: 'Enter your email',
+      subject: 'Subject',
+      subjectPlaceholder: 'Enter the subject',
+      message: 'Message',
+      messagePlaceholder: 'Please describe your requirements in detail',
+      submit: 'Submit',
+      submitSuccess: 'Submitted successfully, we will get back to you soon'
+    },
+    pages: {
+      home: {
+        title: 'Home'
+      },
+      dashboard: {
+        title: 'Dashboard'
+      },
+      account: {
+        title: 'Account'
+      },
+      verify: {
+        title: 'Identity Verification'
+      },
+      password: {
+        title: 'Change Password'
+      },
+      earnings: {
+        title: 'Earnings'
+      },
+      products: {
+        title: 'Products'
+      },
+      contact: {
+        title: 'Contact Us'
+      }
     }
   }
 }; 
