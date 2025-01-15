@@ -1,14 +1,25 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-
-  onMount(() => {
-    window.addEventListener("message", receiveMessage, false);
-  });
-
-  function receiveMessage(event: MessageEvent) {
-    console.log(event);
-    // ... 处理消息
+  let payload = {
+    reference         : `SP_REQUEST_${Math.random()}`,
+    callback_url      : "https://yourdomain.com/profile/sp-notify-callback",
+    email             : "johndoe@example.com",
+    country           : "GB",
+    language          : "EN",
+    verification_mode : "any",
   }
+  payload['face'] = {
+    proof : ""
+  }
+  var token = btoa("YOUR_CLIENT_ID:YOUR_SECRET_KEY");
+  fetch('https://api.shuftipro.com/', {  method : 'post',
+    headers : {
+      'Accept'        : 'application/json',
+      'Content-Type'  : 'application/json',
+      'Authorization' : 'Basic ' +token
+    },
+    body: JSON.stringify(payload)}).then(function(response) {
+      return response.json();
+  }).then(function(data) { return data; });
 </script>
 
 <div class="auto-verify-container">
@@ -17,7 +28,7 @@
     allowfullscreen
     title="Identity Verification"
     style="width:100%; height:800px;" 
-    src="https://ui.idenfy.com/?authToken=3FA5TFPA2ZE3LMPGGS1EGOJNJE"
+    src=""
     allow="camera"
   ></iframe>
   

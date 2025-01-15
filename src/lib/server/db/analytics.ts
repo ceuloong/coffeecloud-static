@@ -93,7 +93,7 @@ function getNodeMetrics(nodes: FilNode[]) {
     minerID: node.node,
     power: Number(node.quality_adj_power || 0),
     powerUnit: node.power_unit,
-    efficiency: Number(node.mining_efficiency || 0),
+    efficiency: Number(node.mining_efficiency || 0)*1000,
     syncStatus: node.sync_status,
     online: Boolean(node.on_line),
     balance: Number(node.balance || 0),

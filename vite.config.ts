@@ -11,7 +11,6 @@ export default defineConfig({
         target: 'http://localhost:8005',
         changeOrigin: true,
         secure: false,
-        ws: true,
         rewrite: (path) => path.replace(/^\/upload-api/, '/api'),
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq, req) => {

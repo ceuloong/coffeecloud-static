@@ -26,10 +26,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     // const idNumber = formData.get('idNumber') as string;
     // const idFrontPath = formData.get('idFrontPath') as string;
     // const idBackPath = formData.get('idBackPath') as string;
-    const { realName, idNumber, idFrontPath, idBackPath } = await request.json();
+    const { realName, idType, idNumber, idFrontPath, idBackPath } = await request.json();
 
     // 验证数据
-    if (!realName || !idNumber || !idFrontPath || !idBackPath) {
+    if (!realName || !idType || !idNumber || !idFrontPath || !idBackPath) {
       return json({ message: '请填写完整信息' }, { status: 400 });
     }
 
@@ -61,9 +61,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       // 保存认证信息
       await connection.query(
         `INSERT INTO user_verifications 
-         (user_id, real_name, id_number, id_front_url, id_back_url) 
-         VALUES (?, ?, ?, ?, ?)`,
-        [locals.user.id, realName, idNumber, idFrontPath, idBackPath]
+         (user_id, real_name, id_type, id_number, id_front_url, id_back_url) 
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [locals.user.id, realName, idType, idNumber, idFrontPath, idBackPath]
       );
 
       // 更新用户表的认证状态

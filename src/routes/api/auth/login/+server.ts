@@ -16,8 +16,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       secure: process.env.NODE_ENV === 'production' || request.url.startsWith('https'),
       maxAge: 60 * 60 * 24 * 7, // 7 days
       // 只在使用 HTTPS 时设置 domain
-      domain: request.url.startsWith('https') ? 'www.cc.io' : undefined
+      domain: request.url.startsWith('https') ? process.env.DOMAIN || 'localhost' : undefined
     });
+    console.log(process.env.NODE_ENV, request.url);
 
     return json({
       user,

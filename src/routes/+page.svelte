@@ -23,7 +23,7 @@
         <div class="stat-label">{t('home.stats.nodes', $language)}</div>
       </div>
       <div class="stat-item">
-        <div class="stat-number">10 PiB+</div>
+        <div class="stat-number">200 PiB+</div>
         <div class="stat-label">{t('home.stats.storage', $language)}</div>
       </div>
       <div class="stat-item">
